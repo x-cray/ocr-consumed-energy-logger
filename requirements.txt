@@ -1,2 +1,5 @@
 opencv-contrib-python
 matplotlib
+pillow
+pytesseract
+pylint
