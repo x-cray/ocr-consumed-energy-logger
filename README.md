@@ -44,5 +44,9 @@ $ apt-get install
 
 Check [this guide](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera) for installing camera in Raspberry Pi.
 
+# Hardware
+
+For flash I used 2 clear LEDs working at 3.1V and drawing 20mA. To turn them on I'll use 3.3V signal on GPIO pins. Since working voltage of the LED is lower we need to drop 3.3V down to 3.1V using dropping resitor. In order to calculate resistor parameters I used [this calculator](https://www.pcboard.ca/led-dropping-resistor-calculator) which gave me 10Ohms.
+
 # Credits
 Tesseract traineddata for recognizing Seven Segment Display was taken from [this great repository](https://github.com/Shreeshrii/tessdata_ssd)
