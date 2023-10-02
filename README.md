@@ -79,7 +79,11 @@ energy-logger@raspberrypi$ pip install -r requirements.txt
 
 Check [this guide](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera) for installing camera on Raspberry Pi.
 
-Additionally, you'll need to create new Google API project, create a service account and retrieve Google Sheets API access credentials in order to be able to log readings to a spreadsheet. Follow the guide [here](https://robocorp.com/docs/development-guide/google-sheets/interacting-with-google-sheets) and save credentials to `credentials.json` file and put it to the `app` directory on Raspberry Pi.
+Additionally, you'll need to create new Google API project, create a service account and retrieve Google Sheets API access credentials in order to be able to log readings to a spreadsheet. Follow the guide [here](https://robocorp.com/docs/development-guide/google-sheets/interacting-with-google-sheets) and save credentials to `credentials.json` file and put it to the `app` directory on Raspberry Pi. Also, don't forget to lock down file permissions:
+
+```console
+energy-logger@raspberrypi$ chmod 600 credentials.json
+```
 
 Now, we need to schedule the logger to be executed let's say once every hour. To do that add the following line to `/etc/crontab`:
 
