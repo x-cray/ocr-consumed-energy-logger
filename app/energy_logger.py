@@ -14,7 +14,7 @@ import numpy as np
 import cv2
 from picamera2 import Picamera2
 import RPi.GPIO as io
-from app.reader import meter_reader
+from reader import meter_reader
 
 LED_1 = 27
 LED_2 = 22
@@ -35,19 +35,21 @@ def flash_indicate_error():
 
 def flash_on():
     """Turns the flash on"""
+    logging.debug("Turning flash on")
     io.output(LED_1, True)
     io.output(LED_2, True)
 
 
 def flash_off():
     """Turns the flash off"""
+    logging.debug("Turning flash off")
     io.output(LED_1, False)
     io.output(LED_2, False)
 
 
 def take_picture() -> np.ndarray:
     """Takes a picture from connected camera and returns it as a numpy array"""
-    logging.info("Capturing an image from camera")
+    logging.info("Capturing a picture from camera")
     camera = Picamera2()
     try:
         config = camera.create_still_configuration({"size": (2592, 1944)})
@@ -89,8 +91,8 @@ def run():
         timestamp = now.replace(microsecond=0).isoformat()
 
         picture = take_picture()
-        readings = meter_reader.get_readings_from_meter_image(picture)
-        logging.info("Obtained readings from meter: %f", readings)
+        (readings, readings_float) = meter_reader.get_readings_from_meter_image(picture)
+        logging.info("Obtained readings from meter: %s => %f", readings, readings_float)
     except meter_reader.ReaderError as err:
         logging.error("Error occured during obtaining of meter readings", exc_info=err)
         save_picture(picture, now.strftime("%Y-%m-%d-%H-%M-%S.jpg"))

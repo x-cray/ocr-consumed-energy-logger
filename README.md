@@ -47,11 +47,11 @@ For highlighting the scene I used 2 [clear LEDs](https://www.kiwi-electronics.co
 
 ## Raspberry Pi setup
 
-To run the energy logger code on Raspbian we need to install a number of dependencies. First, we need OpenCV dependencies. Note, that all the commands prefixed with `user@raspberrypi` will need to be executed on Raspberry Pi:
+To run the energy logger code on Raspbian we need to install a number of dependencies. First, we need OpenCV dependencies and tesseract OCR engine. Note, that all the commands prefixed with `user@raspberrypi` will need to be executed on Raspberry Pi:
 
 ```console
 user@raspberrypi$ sudo apt-get update 
-user@raspberrypi$ sudo apt-get install python3-opencv
+user@raspberrypi$ sudo apt-get install python3-opencv tesseract-ocr
 ```
 
 Then create `energy-logger` user for running the app and add it to `gpio` and `video` groups:

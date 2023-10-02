@@ -167,17 +167,18 @@ def get_readings_from_meter_image(img):
 
     # Find contours on the dilated image
     contours, _ = cv2.findContours(dilated, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
     rectangular_contours = __get_rectangular_contours(contours)
+
+    logging.info(
+        "Found %d total contours out of which %d are rectangular",
+        len(contours),
+        len(rectangular_contours),
+    )
+
     scaled_normalized_contours = [
         __get_normalized_contour_with_dimentions(__get_scaled_contour(c, ratio))
         for c in rectangular_contours
     ]
-    logging.info(
-        "Found {%d} total contours out of which {%d} are rectangular",
-        len(contours),
-        len(rectangular_contours),
-    )
 
     # Assume that display contour is the rectangular contour which
     # aspect ratio is the closest to 1.72
@@ -191,6 +192,8 @@ def get_readings_from_meter_image(img):
 
     if not display_contour:
         raise ReaderError("Unable to find display contour")
+
+    logging.info("Located display contour: %s", display_contour)
 
     (display_width, display_height) = display_contour[1]
     display_dst_pts = np.float32(
@@ -219,4 +222,4 @@ def get_readings_from_meter_image(img):
             + "most likely display contour was not properly identified"
         )
 
-    return readings_float
+    return (readings, readings_float)
