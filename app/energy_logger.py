@@ -15,10 +15,15 @@ import cv2
 from picamera2 import Picamera2
 import RPi.GPIO as io
 from reader import meter_reader
+from publisher import sheets
 
 LED_1 = 27
 LED_2 = 22
 PICTURES_DIR = "pictures"
+
+
+class ApplicationError(Exception):
+    """Application generic exception"""
 
 
 def flash_indicate_error():
@@ -75,13 +80,21 @@ def save_picture(img, filename):
     cv2.imwrite(image_path, cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
 
-def run():
+def main():
     """Energy logger entry point"""
     picture = None
     try:
         logging.basicConfig(
             format="%(asctime)s [%(levelname)s] %(message)s", level=logging.DEBUG
         )
+
+        sheet_id = os.getenv("SHEET_ID")
+        sheet_range = os.getenv("SHEET_RANGE")
+
+        if not sheet_id or not sheet_range:
+            raise ApplicationError(
+                "Make sure to specify SHEET_ID and SHEET_RANGE environment variables"
+            )
 
         io.setmode(io.BCM)
         io.setup(LED_1, io.OUT)
@@ -93,7 +106,8 @@ def run():
         picture = take_picture()
         (readings, readings_float) = meter_reader.get_readings_from_meter_image(picture)
         logging.info("Obtained readings from meter: %s => %f", readings, readings_float)
-    except meter_reader.ReaderError as err:
+        sheets.publish_readings(sheet_id, sheet_range, timestamp, readings_float)
+    except (meter_reader.ReaderError, ApplicationError) as err:
         logging.error("Error occured during obtaining of meter readings", exc_info=err)
         save_picture(picture, now.strftime("%Y-%m-%d-%H-%M-%S.jpg"))
         flash_indicate_error()
@@ -102,4 +116,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    main()
