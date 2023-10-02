@@ -34,6 +34,8 @@ user@macos$ pip install -r requirements.txt
 
 After that one could run included Jupyter notebook in an environment of choice, for instance in [VS Code](https://code.visualstudio.com/docs/datascience/jupyter-notebooks).
 
+
+
 # Hardware
 
 In terms of the hardware I used Raspberry Pi Zero W with [ZeroCam module](https://www.kiwi-electronics.com/en/camera-module-for-raspberry-pi-zero-3882) and it looks pretty much like this:
