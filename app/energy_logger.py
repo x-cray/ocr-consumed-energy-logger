@@ -19,7 +19,8 @@ from publisher import sheets
 
 LED_1 = 27
 LED_2 = 22
-PICTURES_DIR = "pictures"
+SCRIPT_PATH = os.path.realpath(os.path.dirname(__file__))
+PICTURES_DIR = os.path.join(SCRIPT_PATH, "pictures")
 
 
 class ApplicationError(Exception):
@@ -75,7 +76,7 @@ def save_picture(img, filename):
     if not os.path.exists(PICTURES_DIR):
         os.makedirs(PICTURES_DIR)
 
-    image_path = f"{PICTURES_DIR}/{filename}"
+    image_path = os.path.join(PICTURES_DIR, filename)
     logging.info("Saving image to %s", image_path)
     cv2.imwrite(image_path, cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
@@ -109,6 +110,11 @@ def main():
         sheets.publish_readings(sheet_id, sheet_range, timestamp, readings_float)
     except (meter_reader.ReaderError, ApplicationError) as err:
         logging.error("Error occured during obtaining of meter readings", exc_info=err)
+
+        # Indicate in spreadsheet that there was an error that needs attention
+        sheets.publish_readings(sheet_id, sheet_range, timestamp, -1)
+
+        # Back up the picture that led to the error
         save_picture(picture, now.strftime("%Y-%m-%d-%H-%M-%S.jpg"))
         flash_indicate_error()
     finally:
