@@ -12,8 +12,8 @@ and log them to Google Sheets for further analysis.
 
 ## Development setup
 
-In order to develop the algorithm and experiment with OpenCV I used [Jupyter notebook](./ocr-notebook.ipynb).
-To run it and other dev tools we need Python 3 and [tesseract](https://tesseract-ocr.github.io). For development I use Mac OS, so the following steps will assume it:
+The image processing and readings extraction algorithm with experiments can be found in [this Jupyter notebook](./ocr-notebook.ipynb).
+In order to run it only Python 3 and [tesseract](https://tesseract-ocr.github.io) need to be installed. My development box is running Mac OS, so the following steps will assume it:
 
 ```console
 user@macos$ brew install tesseract
@@ -32,16 +32,16 @@ Then run pip to install development dependencies:
 user@macos$ pip install -r requirements.txt
 ```
 
-After that one could run included Jupyter notebook in an environment of choice, for instance in [VS Code](https://code.visualstudio.com/docs/datascience/jupyter-notebooks).
+After that one should be able to run included Jupyter notebook in an environment of choice, for instance in [VS Code](https://code.visualstudio.com/docs/datascience/jupyter-notebooks).
 
 # Hardware
 
-In terms of the hardware I used Raspberry Pi Zero W with [ZeroCam module](https://www.kiwi-electronics.com/en/camera-module-for-raspberry-pi-zero-3882) and it looks pretty much like this:
+In terms of the hardware the code has been tested on Raspberry Pi Zero W with [ZeroCam module](https://www.kiwi-electronics.com/en/camera-module-for-raspberry-pi-zero-3882) and the setup looks pretty much like this:
 
 | ![RPi front](./img/rpi-1.jpg) | ![RPi back](./img/rpi-2.jpg) |
 | --- | --- |
 
-For highlighting the scene I used 2 [clear LEDs](https://www.kiwi-electronics.com/en/3mm-led-clear-white-10-pack-3099) working at 3.1V and drawing 20mA. To turn them on I'll use 3.3V signal on GPIO pins. Since working voltage of the LED is lower we need to drop 3.3V down to 3.1V using dropping resitor. In order to calculate resistor parameters I used [this calculator](https://www.pcboard.ca/led-dropping-resistor-calculator) which gave me [10 ohm](https://www.kiwi-electronics.com/en/electronics-parts-components-113/passive-components-211/resistor-10-ohm-1-4-watt-5-10-pack-643). More about [controlling LEDs via GPIO](https://www.freecodecamp.org/news/hello-gpio-blinking-led-using-raspberry-pi-zero-wh-65af81718c14/).
+For highlighting the scene the board is using 2 [clear LEDs](https://www.kiwi-electronics.com/en/3mm-led-clear-white-10-pack-3099) working at 3.1V and drawing 20mA. To turn them on we'll output a 3.3V signal on GPIO pins. Since the working voltage of an LED is lower we need to drop 3.3V down to 3.1V using dropping resitor. In order to calculate resistor parameters I used [this calculator](https://www.pcboard.ca/led-dropping-resistor-calculator) which gave me [10 ohm](https://www.kiwi-electronics.com/en/electronics-parts-components-113/passive-components-211/resistor-10-ohm-1-4-watt-5-10-pack-643). More about [controlling LEDs via GPIO](https://www.freecodecamp.org/news/hello-gpio-blinking-led-using-raspberry-pi-zero-wh-65af81718c14/).
 
 ## Raspberry Pi setup
 
@@ -67,7 +67,7 @@ user@macos$ scp -r ./app energy-logger@raspberrypi.local:~
 energy-logger@raspberrypi.local's password:
 ```
 
-Type `energy-logger`'s password when asked. After command completes the `app` directory should appear under `energy-logger` user home directory. Note that it's rather bad security practice to allow ssh password authentication, but for the sake of simplicity I used Raspbian defaults, read [here](https://www.cyberciti.biz/faq/how-to-disable-ssh-password-login-on-linux/) to learn how to disable it.
+Type `energy-logger`'s password when asked. After command completes the `app` directory should appear in `energy-logger` user home directory. Note that it's rather bad security practice to allow ssh password authentication, but for the sake of simplicity we use Raspbian defaults here. Read [here](https://www.cyberciti.biz/faq/how-to-disable-ssh-password-login-on-linux/) to learn how to disable SSH password authentication.
 
 And then we can install energy logger Python dependencies (on the Raspberry Pi):
 
@@ -79,7 +79,7 @@ energy-logger@raspberrypi$ pip install -r requirements.txt
 
 Check [this guide](https://projects.raspberrypi.org/en/projects/getting-started-with-picamera) for installing camera on Raspberry Pi.
 
-Additionally, you'll need to create new Google API project, create a service account and retrieve Google Sheets API access credentials in order to be able to log readings to a spreadsheet. Follow the guide [here](https://robocorp.com/docs/development-guide/google-sheets/interacting-with-google-sheets) and save credentials to `credentials.json` file and put it to the `app` directory on Raspberry Pi. Also, don't forget to lock down file permissions:
+Additionally, you'll need to create new Google API project, create a service account and retrieve Google Sheets API access credentials in order to be able to log readings to a spreadsheet. Follow the guide [here](https://robocorp.com/docs/development-guide/google-sheets/interacting-with-google-sheets) and save credentials to `credentials.json` file and put it to the `app` directory on Raspberry Pi. Also, don't forget to lock down file permissions (those are secrets after all):
 
 ```console
 energy-logger@raspberrypi$ chmod 600 credentials.json

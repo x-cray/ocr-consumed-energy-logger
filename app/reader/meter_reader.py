@@ -188,6 +188,10 @@ def get_readings_from_meter_image(img):
         # large number to go to the end of the list
         key=lambda nc: abs(1.72 - nc[1][0] / nc[1][1]) if nc[1][1] else 100,
     )
+    # To further reduce false-positives take the biggest contour out of top 3 matches
+    sorted_contours = sorted(
+        sorted_contours[:3], key=lambda nc: nc[1][0] * nc[1][1], reverse=True
+    )
     display_contour = next(iter(sorted_contours), None)
 
     if not display_contour:

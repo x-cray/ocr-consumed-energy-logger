@@ -15,6 +15,7 @@ class TestMeterReader:
             ("../../img/readings-3.jpg", 92.647),
             ("../../img/readings-4.jpg", 92.469),
             ("../../img/readings-5.jpg", 92.469),
+            ("../../img/readings-6.jpg", 92.732),
         ],
     )
     def test_readings_detection_and_ocr(self, image_path, expected_readings):
@@ -23,7 +24,7 @@ class TestMeterReader:
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         # Act
-        readings = meter_reader.get_readings_from_meter_image(image)
+        (_, readings) = meter_reader.get_readings_from_meter_image(image)
 
         # Assert
         assert readings == expected_readings
