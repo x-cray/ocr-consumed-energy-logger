@@ -8,7 +8,7 @@ import cv2
 from . import ReaderError
 from . import geometry
 
-FIND_EDGES_IMAGE_HEIGHT = 900
+FIND_EDGES_IMAGE_HEIGHT = 1000
 SCRIPT_PATH = os.path.realpath(os.path.dirname(__file__))
 
 
@@ -147,7 +147,7 @@ def get_readings_from_meter_image(img):
         Image with a photo of the meter
     """
     find_display_image = img.copy()
-    find_display_image = cv2.cvtColor(find_display_image, cv2.COLOR_BGR2GRAY)
+    find_display_image = cv2.cvtColor(find_display_image, cv2.COLOR_RGB2GRAY)
 
     # Resize the image for more accurate contour detection
     (height, width) = find_display_image.shape[:2]
