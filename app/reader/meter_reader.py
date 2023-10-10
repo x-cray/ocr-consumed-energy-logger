@@ -34,6 +34,14 @@ def __get_scaled_contour(contour, ratio):
     return np.floor_divide(contour, ratio).astype(int)
 
 
+def __resize_image(img, new_height):
+    """Resizes source image to provided max height maintaining aspect ratio"""
+    (height, width) = img.shape[:2]
+    ratio = new_height / float(height)
+    dim = (int(width * ratio), new_height)
+    return (cv2.resize(img, dim, interpolation=cv2.INTER_AREA), ratio)
+
+
 def __smooth_image(img):
     """Smoothes the image"""
     _, th1 = cv2.threshold(img, 180, 255, cv2.THRESH_BINARY)
@@ -46,7 +54,7 @@ def __smooth_image(img):
 def __remove_noise_and_smooth(img):
     """Prepares image for OCR"""
     # Apply dilation and erosion to remove some noise
-    kernel = np.ones((3, 3), np.uint8)
+    kernel = np.ones((5, 5), np.uint8)
     filtered = cv2.adaptiveThreshold(
         img.astype(np.uint8), 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 61, 8
     )
@@ -121,9 +129,9 @@ def __get_binarized_readings_roi(display_img, display_width, display_height):
     ocr_image = __remove_noise_and_smooth(ocr_image)
 
     # Knowing the location of the readings within the LCD ROI we can extract the readings ROI
-    readings_left_edge = int(display_width * 0.144)
+    readings_left_edge = int(display_width * 0.150)
     readings_right_edge = int(display_width * 0.965)
-    readings_top_edge = int(display_height * 0.367)
+    readings_top_edge = int(display_height * 0.366)
     readings_bottom_edge = int(display_height * 0.650)
     readings_roi = ocr_image[
         readings_top_edge:readings_bottom_edge, readings_left_edge:readings_right_edge
@@ -134,7 +142,7 @@ def __get_binarized_readings_roi(display_img, display_width, display_height):
         readings_roi, 20, 20, 20, 20, cv2.BORDER_CONSTANT, value=(255, 255, 255)
     )
 
-    return readings_roi
+    return __resize_image(readings_roi, 100)[0]
 
 
 def get_readings_from_meter_image(img):
@@ -150,12 +158,7 @@ def get_readings_from_meter_image(img):
     find_display_image = cv2.cvtColor(find_display_image, cv2.COLOR_RGB2GRAY)
 
     # Resize the image for more accurate contour detection
-    (height, width) = find_display_image.shape[:2]
-    ratio = FIND_EDGES_IMAGE_HEIGHT / float(height)
-    dim = (int(width * ratio), FIND_EDGES_IMAGE_HEIGHT)
-    find_display_image = cv2.resize(
-        find_display_image, dim, interpolation=cv2.INTER_AREA
-    )
+    (find_display_image, ratio) = __resize_image(find_display_image, FIND_EDGES_IMAGE_HEIGHT)
 
     # Apply blur and detect edges
     find_display_image = cv2.GaussianBlur(find_display_image, (3, 3), 0)

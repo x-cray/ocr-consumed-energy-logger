@@ -16,6 +16,8 @@ class TestMeterReader:
             ("../../img/readings-4.jpg", 92.469),
             ("../../img/readings-5.jpg", 92.469),
             ("../../img/readings-6.jpg", 92.732),
+            ("../../img/readings-7.jpg", 92.821),
+            ("../../img/readings-8.jpg", 92.859),
         ],
     )
     def test_readings_detection_and_ocr(self, image_path, expected_readings):
