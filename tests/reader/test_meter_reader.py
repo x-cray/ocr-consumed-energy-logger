@@ -18,6 +18,7 @@ class TestMeterReader:
             ("../../img/readings-6.jpg", 92.732),
             ("../../img/readings-7.jpg", 92.821),
             ("../../img/readings-8.jpg", 92.859),
+            ("../../img/readings-9.jpg", 92.894),
         ],
     )
     def test_readings_detection_and_ocr(self, image_path, expected_readings):
@@ -33,7 +34,7 @@ class TestMeterReader:
 
     def test_wrong_image_exception(self):
         # Arrange
-        image = cv2.imread(os.path.join(SCRIPT_PATH, "../../img/rpi-1.jpg"))
+        image = cv2.imread(os.path.join(SCRIPT_PATH, "../../img/rpi-2.jpg"))
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
         # Assert

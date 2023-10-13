@@ -21,11 +21,11 @@ def __get_rectangular_contours(contours):
     """Approximates provided contours and returns only those which have 4 vertices"""
     res = []
     for contour in contours:
-        peri = cv2.arcLength(contour, closed=True)
-        approx = cv2.approxPolyDP(contour, 0.04 * peri, closed=True)
-        hull = cv2.convexHull(approx)
-        if len(hull) == 4:
-            res.append(hull)
+        hull = cv2.convexHull(contour)
+        peri = cv2.arcLength(hull, closed=True)
+        approx = cv2.approxPolyDP(hull, 0.04 * peri, closed=True)
+        if len(approx) == 4:
+            res.append(approx)
     return res
 
 

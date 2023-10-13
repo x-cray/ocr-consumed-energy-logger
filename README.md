@@ -1,8 +1,8 @@
 # ocr-consumed-energy-logger
-Raspberry Pi project for logging OCR-ed readings from consumed energy meter.
+Raspberry Pi project for logging OCR-ed readings from an energy meter.
 
 # About
-This program is used to recognize readings from energy meter like this:
+This script is used to recognize readings from an energy meter like this:
 
 ![Meter](./img/readings-1.jpg)
 
