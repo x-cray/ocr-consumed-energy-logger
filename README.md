@@ -4,7 +4,7 @@ Raspberry Pi project for logging OCR-ed readings from an energy meter.
 # About
 This script is used to recognize readings from an energy meter like this:
 
-![Meter](./img/readings-1.jpg)
+![Meter](./img/readings-2.jpg)
 
 and log them to Google Sheets for further analysis.
 
