@@ -8,12 +8,27 @@ This script is used to recognize readings from an energy meter like this:
 
 and log them to Google Sheets for further analysis.
 
+The project is merely an exercise with OpenCV and OCR, so the code could be helpful in situations when there's no other interfaces to get the readings. For more reliable setup it's probably better to use wired connections like P1 port or an optical interface. There's a number of projects that deal with IR readers:
+
+- https://github.com/golles/ha-kamstrup_403
+- https://github.com/matthijsvisser/kamstrup-402-mqtt
+- https://github.com/gertvdijk/PyKMP
+
 # Requirements
+
+## Hardware
+
+In terms of the hardware the code has been tested on Raspberry Pi Zero W with [ZeroCam module](https://www.kiwi-electronics.com/en/camera-module-for-raspberry-pi-zero-3882) and the setup looks pretty much like this:
+
+| ![RPi front](./img/rpi-1.jpg) | ![RPi back](./img/rpi-2.jpg) |
+| --- | --- |
+
+For highlighting the scene 2 [clear LEDs](https://www.kiwi-electronics.com/en/3mm-led-clear-white-10-pack-3099) are used that work at 3.1V and draw 20mA. To turn them on we'll output a 3.3V signal on GPIO pins. Since the working voltage of an LED is lower we need to drop 3.3V down to 3.1V using dropping resitor. In order to calculate resistor parameters I used [this calculator](https://www.pcboard.ca/led-dropping-resistor-calculator) which gave me [10 ohm](https://www.kiwi-electronics.com/en/electronics-parts-components-113/passive-components-211/resistor-10-ohm-1-4-watt-5-10-pack-643). More about [controlling LEDs via GPIO](https://www.freecodecamp.org/news/hello-gpio-blinking-led-using-raspberry-pi-zero-wh-65af81718c14/).
 
 ## Development setup
 
 The image processing and readings extraction algorithm with experiments can be found in [this Jupyter notebook](./ocr-notebook.ipynb).
-In order to run it only Python 3 and [tesseract](https://tesseract-ocr.github.io) need to be installed. My development box is running Mac OS, so the following steps will assume it:
+In order to run the notebook we'll need Python 3 and [tesseract](https://tesseract-ocr.github.io) installed. My development box is running Mac OS, so the following steps will assume it:
 
 ```console
 user@macos$ brew install tesseract
@@ -34,18 +49,9 @@ user@macos$ pip install -r requirements.txt
 
 After that one should be able to run included Jupyter notebook in an environment of choice, for instance in [VS Code](https://code.visualstudio.com/docs/datascience/jupyter-notebooks).
 
-# Hardware
-
-In terms of the hardware the code has been tested on Raspberry Pi Zero W with [ZeroCam module](https://www.kiwi-electronics.com/en/camera-module-for-raspberry-pi-zero-3882) and the setup looks pretty much like this:
-
-| ![RPi front](./img/rpi-1.jpg) | ![RPi back](./img/rpi-2.jpg) |
-| --- | --- |
-
-For highlighting the scene the board is using 2 [clear LEDs](https://www.kiwi-electronics.com/en/3mm-led-clear-white-10-pack-3099) working at 3.1V and drawing 20mA. To turn them on we'll output a 3.3V signal on GPIO pins. Since the working voltage of an LED is lower we need to drop 3.3V down to 3.1V using dropping resitor. In order to calculate resistor parameters I used [this calculator](https://www.pcboard.ca/led-dropping-resistor-calculator) which gave me [10 ohm](https://www.kiwi-electronics.com/en/electronics-parts-components-113/passive-components-211/resistor-10-ohm-1-4-watt-5-10-pack-643). More about [controlling LEDs via GPIO](https://www.freecodecamp.org/news/hello-gpio-blinking-led-using-raspberry-pi-zero-wh-65af81718c14/).
-
 ## Raspberry Pi setup
 
-To run the energy logger code on Raspbian we need to install a number of dependencies. First, we need OpenCV dependencies and tesseract OCR engine. Note, that all the commands prefixed with `user@raspberrypi` will need to be executed on Raspberry Pi:
+To run the energy logger code on Raspbian OS we need to install a number of dependencies. First, we need OpenCV dependencies and tesseract OCR engine. Note, that all the commands prefixed with `user@raspberrypi` will need to be executed on Raspberry Pi:
 
 ```console
 user@raspberrypi$ sudo apt-get update 
