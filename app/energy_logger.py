@@ -16,6 +16,7 @@ from picamera2 import Picamera2
 import RPi.GPIO as io
 from reader import meter_reader
 from publisher import sheets
+import last_run
 
 LED_1 = 27
 LED_2 = 22
@@ -108,6 +109,7 @@ def main():
         (readings, readings_float) = meter_reader.get_readings_from_meter_image(picture)
         logging.info("Obtained readings from meter: %s => %f", readings, readings_float)
         sheets.publish_readings(sheet_id, sheet_range, timestamp, readings_float)
+        last_run.update_last_run()
     except (meter_reader.ReaderError, ApplicationError) as err:
         logging.error("Error occured during obtaining of meter readings", exc_info=err)
 
